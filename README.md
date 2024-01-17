@@ -4,6 +4,10 @@ Practising Django with an imaginary football teams page.
 Part of my studies at the [DCI](https://start.digitalcareerinstitute.org/become-a-python-backend-developer)
 
 ### Setup
+First download:
+
+    git clone https://github.com/dci-student-jordan/django_football
+
 Create and activate a virtual environment (UNIX):
 
     mkdir .venv
