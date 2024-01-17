@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'team',
     'eshop',
-    'manual_population',
+    'man_pop',
 ]
 
 MIDDLEWARE = [

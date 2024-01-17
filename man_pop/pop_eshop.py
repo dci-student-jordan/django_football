@@ -1,5 +1,5 @@
 """Manually call create_items() from this file to populate the eshop_item table with some items to buy"""
-from ..eshop.models import Item
+from eshop.models import Item
 
 shop_items = [
     {"item":"T-Shirt", "description":"Hot and sexy", "price" : 45, "size": "M"},

@@ -1,6 +1,6 @@
 from django.shortcuts import HttpResponse
 from django.urls import reverse
-from .models import Player, GoalsScored, Games
+from .models import Player, GoalsScored, Games, PlayerProfile, TeamReg
 from django.db.models import Count
 from django.db.models.functions import ExtractYear
 
@@ -100,8 +100,19 @@ def player(request, player_id):
     <p>Name:{player.name}</p>
     <p>Age:{player.age}</p>
     <p>Position:{player.position}</p>
-    <p>Goals: {len(GoalsScored.objects.filter(player=player_id))}</p>
-    </br>
+    <p>Goals: {len(GoalsScored.objects.filter(player=player))}</p>
+    <h3>additional informations:</h3><ul>"""
+    player_profile = PlayerProfile.objects.get(player = player)
+    for col_name, val in player_profile.__dict__.items():
+        if col_name in ["height", "weight", "nationality"]:  # Exclude private attributes
+            page += f"""<li>{col_name}: {val}</li>"""
+    other_teams = TeamReg.objects.filter(player=player)
+    if other_teams:
+        page += "<h5>former Teams:</h5><ul>"
+        for team in other_teams:
+            page += f"""<li>Team '{team.team.name}': from {team.from_date} to {team.to_date}</li>"""
+        page += "</ul>"
+    page += f"""</ul></br>
                 {shop_link()}
     </body>
     </html>

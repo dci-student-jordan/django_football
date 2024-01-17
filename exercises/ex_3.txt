@@ -1,0 +1,9 @@
+Exercise L49
+1 - Create a profile for each player with additional information as height, weight, nationality (1:1 - profile to player)
+2 - In your view when you display info about each player add also the profile info
+3 - Create a model for Teams with attributes name, town, color
+    example if our team is Hertha then the Teams table should include all teams in the league
+    Hertha, Union, Bayern, etc,...
+4 - Modify the Player model in order to be able to relate the Player to teams that he has played in the past
+    (Many-to-many between players and teams) with additional information (from year, toyear)
+5 - In your view when you display info about each player add also the teams that he has played before in order by toyear
