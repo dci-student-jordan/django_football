@@ -54,7 +54,18 @@ def create_games():
         Games.objects.create(game_date=random.choice(saturdays()), opponent=random.choice(opponents), score=random.randint(1, 5))
 
 def populate_goals():
+    """randomly populate the goalsscored table"""
     player_ids = Player.objects.values_list("id", flat=True)
     for game in Games.objects.all():
         for goal in range(1, game.score):
             GoalsScored.objects.create(game_id=game.pk, minute=random.randint(0,59), player_id=random.choice(player_ids))
+
+def update_goals():
+    """update the goalsscored table.
+    
+    Here we exclude goalskeepers from scoring
+    """
+    player_ids = Player.objects.exclude(position="goalkeeper").values_list("id", flat=True)
+    for goal in GoalsScored.objects.all():
+        goal.player_id=random.choice(player_ids)
+        goal.save()

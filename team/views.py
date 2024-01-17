@@ -13,21 +13,28 @@ def shop_link():
                 <h3>Wanna buy from our online Shop?"</h3>
                 <a href={url}>e-Shop</a>"""
 
+def top_links(exclude_request):
+    """Navigation links excluding the calling page."""
+    urls =[
+        (reverse("home_page"), "Home"),
+        (reverse("about_page"), f"About"),
+        (reverse("team_page"), f"Team"),
+        (reverse("scores_page"), f"Goals per player"),
+        (reverse("seasons_page"), f"Seasons")
+    ]
+    returnded_urls = ""
+    for url in [url for url in urls if not url[0] == exclude_request.path]:
+        returnded_urls += f"<a href={url[0]}>{url[1]}</a></br>"
+    return returnded_urls
+                
+
 def homePageView(request):
-    url1=reverse("about_page")
-    url2=reverse("team_page")
-    url3=reverse("scores_page")
-    url4=reverse("seasons_page")
     page = f"""
      <!DOCTYPE html>
         <html>
             <body>
-
+                {top_links(request)}
                 <h1>This is the web page for our favorite Team!</h1>
-                <a href={url1}>about</a></br>
-                <a href={url2}>Team</a></br>
-                <a href={url3}>Goals per player</a></br>
-                <a href={url4}>Seasons</a>
                 {shop_link()}
             </body>
         </html> 
@@ -35,14 +42,12 @@ def homePageView(request):
     return HttpResponse(page)
 
 def about(request):
-    url1=reverse("home_page")
     page = f"""
      <!DOCTYPE html>
         <html>
             <body>
-
+                {top_links(request)}
                 <h1>About</h1>
-                <a href={url1}>home</a>
                 <p>CONTACT</p>
                 {shop_link()}
 
@@ -53,18 +58,12 @@ def about(request):
 
 
 def team_players(request):
-    url1=reverse("home_page")
-    url2=reverse("about_page")
-    url3=reverse("scores_page")
     players = Player.objects.all()
     page_part1 = f"""
      <!DOCTYPE html>
         <html>
             <body>
-
-                <a href={url1}>home</a><br>
-                <a href={url2}>about</a><br>
-                <a href={url3}>Scores</a>
+                {top_links(request)}
                 <h1>Here are our players, ordered by Position:</h1>
                 <ul>"""
     positions = Player.objects.values_list("position", flat=True)
@@ -88,9 +87,6 @@ def team_players(request):
     return HttpResponse(page_part1)
 
 def player(request, player_id):
-    url = reverse("home_page")
-    url2 = reverse("team_page")
-    url3=reverse("scores_page")
     player = Player.objects.get(id=player_id)
     page = f"""
     <!DOCTYPE html>
@@ -99,9 +95,7 @@ def player(request, player_id):
     <title>Our Scores</title>
     </head>
     <body>
-    <a href = "{url}">Home Page</a><br>
-    <a href = "{url2}">Team Page</a><br>
-    <a href = "{url3}">Scorers Page</a>
+                {top_links(request)}
     <h1>About Player {player_id}</h1>
     <p>Name:{player.name}</p>
     <p>Age:{player.age}</p>
@@ -115,8 +109,6 @@ def player(request, player_id):
     return HttpResponse(page)
 
 def scorers(request):
-    url = reverse("home_page")
-    url2 = reverse("team_page")
     page = f"""
     <!DOCTYPE html>
     <html>
@@ -124,8 +116,7 @@ def scorers(request):
     <title>Our Seasons</title>
     </head>
     <body>
-    <a href = "{url}">Home Page</a><br>
-    <a href = "{url2}">Team Page</a>
+                {top_links(request)}
     <h1>Our Players goals:</h1>"""
     for player in Player.objects.annotate(total_goals=Count('goals_scored')).order_by('-total_goals'):
         player_url = reverse("player_data", args=[int(player.id)])
@@ -139,8 +130,6 @@ def scorers(request):
     return HttpResponse(page)
 
 def best_seasons(request):
-    url = reverse("home_page")
-    url2 = reverse("team_page")
     page = f"""
     <!DOCTYPE html>
     <html>
@@ -148,8 +137,7 @@ def best_seasons(request):
     <title>Our Team</title>
     </head>
     <body>
-    <a href = "{url}">Home Page</a><br>
-    <a href = "{url2}">Team Page</a>
+                {top_links(request)}
     <h1>Our Best Seasons so far:</h1>"""
     # This is chatGPT...
     # Query for the number of games per year
@@ -207,7 +195,6 @@ def best_seasons(request):
             page += f"""<li style='display: inline-block; margin-right: 10px';><p><a href={player_url}>{scorer['player_name']}</a> (goals: {scorer['num_goals']})</p>
                         </li>
             """
-            print(player_url, scorer['player_name'], year)
     page += f"""</ol>
     </br>
     {shop_link()}
