@@ -1,0 +1,8 @@
+Exercise L48:
+In your team application you have to implement the following tasks:
+1 - Create a model of games that will provide records of games played by the team:
+    game_date, opponent, score
+2 - Create a table goals_scored by using the following attributes:
+    game_id, minute, player_id
+3 - Provide some sample data either by using the shell or the db directly
+4 - Create a page with a scorers list of players that have scored ordered by the number of goals
