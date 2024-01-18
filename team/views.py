@@ -3,6 +3,7 @@ from django.urls import reverse
 from .models import Player, GoalsScored, Games, PlayerProfile, TeamReg
 from django.db.models import Count
 from django.db.models.functions import ExtractYear
+from django.db import connection, reset_queries
 
 
 # Create your views here.
@@ -58,7 +59,8 @@ def about(request):
 
 
 def team_players(request):
-    players = Player.objects.all()
+    reset_queries()
+    players = Player.objects.values("id", "name", "position")
     page_part1 = f"""
      <!DOCTYPE html>
         <html>
@@ -66,17 +68,20 @@ def team_players(request):
                 {top_links(request)}
                 <h1>Here are our players, ordered by Position:</h1>
                 <ul>"""
-    positions = Player.objects.values_list("position", flat=True)
-    for position in list(positions.distinct()):
+    positions = Player.objects.values('position').annotate(count=Count('position'))
+    # print("POSITIONS:", positions)
+    for position in positions:
+        pos_name = position["position"]
+        pos_count = position["count"]
         #name of position
-        page_part1 += f"<li><h3>{position}</h3>"
+        page_part1 += f"<li><h3>{pos_name}</h3>"
         # number of players in position
-        page_part1 += f"<p>number of players: {list(positions).count(position)}</p><ol>"
+        page_part1 += f"<p>number of players: {pos_count}</p><ol>"
         for player in players:
-            if player.position == position:
+            if player["position"] == pos_name:
                 #add link to player
-                player_url = reverse("player_data", args=[player.id])
-                page_part1 += f'<li><a href ="{player_url}">' + player.name + "</a></li>"
+                player_url = reverse("player_data", args=[player["id"]])
+                page_part1 += f'<li><a href ="{player_url}">' + player["name"] + "</a></li>"
         page_part1 += "</ol></li>"
     page_part1 += f"""
                 </ul>
@@ -84,9 +89,11 @@ def team_players(request):
             </body>
         </html> 
     """
+    print("TEAMPLAYERS:", connection.queries)
     return HttpResponse(page_part1)
 
 def player(request, player_id):
+    reset_queries()
     player = Player.objects.get(id=player_id)
     page = f"""
     <!DOCTYPE html>
@@ -108,18 +115,22 @@ def player(request, player_id):
             page += f"""<li>{col_name}: {val}</li>"""
     other_teams = TeamReg.objects.filter(player=player)
     if other_teams:
-        page += "<h5>former Teams:</h5><ul>"
+        page += f"<li><p>Joined our Team: {other_teams[len(other_teams)-1].to_date}</p><h5>former Teams:</h5><ul>"
         for team in other_teams:
             page += f"""<li>Team '{team.team.name}': from {team.from_date} to {team.to_date}</li>"""
-        page += "</ul>"
+        page += "</ul></li>"
+    else:
+        page += "<li>Joined our Team from the very beginning.</li>"
     page += f"""</ul></br>
                 {shop_link()}
     </body>
     </html>
     """
+    print("PLAYERS:", connection.queries)
     return HttpResponse(page)
 
 def scorers(request):
+    reset_queries()
     page = f"""
     <!DOCTYPE html>
     <html>
@@ -138,9 +149,11 @@ def scorers(request):
     {shop_link()}
     </html>
     """
+    print("SCORERS:", connection.queries)
     return HttpResponse(page)
 
 def best_seasons(request):
+    reset_queries()
     page = f"""
     <!DOCTYPE html>
     <html>
@@ -212,4 +225,5 @@ def best_seasons(request):
     </body>
     </html>
     """
+    print("SEASONS:", connection.queries)
     return HttpResponse(page)

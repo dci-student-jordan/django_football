@@ -1,5 +1,6 @@
 """Manually call create_items() from this file to populate the eshop_item table with some items to buy"""
 from eshop.models import Item
+from random import choice, randint
 
 shop_items = [
     {"item":"T-Shirt", "description":"Hot and sexy", "price" : 45, "size": "M"},
@@ -228,7 +229,5 @@ items = [
 
 def create_items():
     from random import randint
-    len_item = len(items)-1
-    len_descr = len(descriptions)-1
     for i in range(5000):
-        Item.objects.create(item=items[randint(0, len_item)], description=descriptions[randint(0, len_descr)], price=randint(15, 75), size=sizes[randint(0, len(sizes)-1)])
+        Item.objects.create(item=choice(items), description=choice(descriptions), price=randint(15, 75), size=choice(sizes))

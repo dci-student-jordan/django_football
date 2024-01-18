@@ -1,6 +1,8 @@
 from django.shortcuts import HttpResponse, redirect
 from django.urls import reverse
 from .models import Item
+from django.db.models import Count
+from django.db import connection, reset_queries
 
 # Create your views here.
 
@@ -49,9 +51,9 @@ def about(request):
 
 def e_products(request):
     """List all products counted as links to product-page"""
+    reset_queries()
     url1=reverse("eshop_home")
     url2=reverse("eshop_about")
-    products = Item.objects.values_list("item", flat=True)
     page_part1 = f"""
      <!DOCTYPE html>
         <html>
@@ -64,11 +66,11 @@ def e_products(request):
                 <p>{url_for_size('XS')} | {url_for_size('S')} | {url_for_size('M')} | {url_for_size('L')} | {url_for_size('XL')}</p>
                 <ul>"""
     
-    for product in list(products.distinct()):
-        num_prod = Item.objects.filter(item=product).count()
-        product_url = reverse("eshop_product", args=[product])
+    for product in Item.objects.values("item").annotate(count=Count('item')):
+        num_prod = product["count"]
+        product_url = reverse("eshop_product", args=[product["item"]])
         page_part1 += f"""<li>
-                            <h3><a href={product_url}>{product}</a></h3>
+                            <h3><a href={product_url}>{product["item"]}</a></h3>
                             <p>Available: {num_prod}</p>
                         </li>"""
     
@@ -78,9 +80,11 @@ def e_products(request):
             </body>
         </html> 
     """
+    print(connection.queries)
     return HttpResponse(page_part1+page_part2)
 
 def product(request, item):
+    reset_queries()
     url = reverse("eshop_home")
     url2 = reverse("eshop_products")
     shop_items = Item.objects.filter(item=item)
@@ -109,9 +113,11 @@ def product(request, item):
     </body>
     </html>
     """
+    print(connection.queries)
     return HttpResponse(page)
 
 def e_sizes(request, size):
+    reset_queries()
     url = reverse("eshop_home")
     url2 = reverse("eshop_products")
     shop_items = Item.objects.filter(size=size)
@@ -137,4 +143,5 @@ def e_sizes(request, size):
     </body>
     </html>
     """
+    print(connection.queries)
     return HttpResponse(page)
