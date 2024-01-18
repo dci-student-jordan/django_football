@@ -8,18 +8,20 @@ class Team(models.Model):
 
 class Player(models.Model):
     """The Player model"""
-    POSITIONS = (
+    POSITIONS = [
         ("goalkeeper", "Goal Keeper"),
         ("forward", "Forward"),
-        ("midfielder", "Middle"),
-        ("defense", "Defense"),
+        ("defense", "Midfielder"),
         ("striker", "Striker"),
         ("substitute", "Substitute")
-    )
+    ]
     name = models.CharField(max_length=100)
     age = models.PositiveIntegerField()
     position = models.CharField(max_length=100, choices=POSITIONS)
     teams = models.ManyToManyField(Team, through="TeamReg")
+
+    def __str__(self) -> str:
+        return self.name
 
 class TeamReg(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
