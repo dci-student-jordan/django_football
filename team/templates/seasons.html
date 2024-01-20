@@ -1,0 +1,33 @@
+{% extends "basepage.html" %}
+
+{% block head %}
+Seasons of our favorite Team
+{% endblock head %}
+
+
+{% block nav %}
+{{navs}}
+{% endblock nav %}
+
+{% block content %}
+<h1>Our best seasons so far:</h1>
+<ul>
+    {% for year, data in years %}
+        <li><h2>{{year}}</h2>
+            <p style="font-size: larger;"><em>Number of goals: {{data.total_goals}}</em></p>
+            <p>Number of games: {{data.num_games}}</p>
+            <h3>Scorers:</h3>
+            <ol style='list-style-type: none; padding: 0;'>
+            {% for scorer in data.top_scorers %}
+                <li style='display: inline-block; margin-right: 10px';><a href="{% url 'player_data' scorer.player_id %}">{{scorer.player_name}}</a> (goals: {{scorer.num_goals}})</li>
+            {% endfor %}
+            </ol>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock content %}
+
+
+{% block foot %}
+{{foot}}
+{% endblock foot %}

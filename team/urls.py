@@ -1,11 +1,11 @@
 from django.urls import path
-from .views import homePageView, about, team_players, player, scorers, best_seasons
+from .views import HomePageView, AboutPageView, TeamPageView, PlayerPageView, ScorerPageView, SeasonsPageView
 
 urlpatterns = [
-    path("", homePageView, name="home_page"),
-    path("about/", about, name="about_page"),
-    path("team/", team_players, name="team_page"),
-    path("team/scorers", scorers, name="scores_page"),
-    path("team/seasons", best_seasons, name="seasons_page"),
-    path("team/<int:player_id>/", player, name="player_data"),
+    path("", HomePageView.as_view(), name="home_page"),
+    path("about/", AboutPageView.as_view(), name="about_page"),
+    path("team/", TeamPageView.as_view(), name="team_page"),
+    path("team/scorers", ScorerPageView.as_view(), name="scores_page"),
+    path("team/seasons", SeasonsPageView.as_view(), name="seasons_page"),
+    path("team/<int:player_id>/", PlayerPageView.as_view(), name="player_data"),
 ]

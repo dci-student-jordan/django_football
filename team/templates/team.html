@@ -1,0 +1,33 @@
+{% extends "basepage.html" %}
+
+{% block head %}
+Players of our favorite Team
+{% endblock head %}
+
+
+{% block nav %}
+{{navs}}
+{% endblock nav %}
+
+{% block content %}
+<h1>Here are our players, ordered by Position:</h1>
+<ul>
+    {% for position in positions %}
+        <li><h3>{{position.position}}</h3>
+            <p>number of players: {{position.count}}</p>
+            <ol>
+            {% for player in players %}
+                {% if player.position == position.position %}
+                    <li><a href="{% url 'player_data' player.id %}">{{player.name}}</a></li>
+                {% endif %}
+            {% endfor %}
+            </ol>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock content %}
+
+
+{% block foot %}
+{{foot}}
+{% endblock foot %}

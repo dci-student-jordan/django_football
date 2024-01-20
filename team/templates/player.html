@@ -1,0 +1,39 @@
+{% extends "basepage.html" %}
+
+{% block head %}
+Player of our favorite Team
+{% endblock head %}
+
+
+{% block nav %}
+{{navs}}
+{% endblock nav %}
+
+{% block content %}
+<h1>About Player {{player.id}}</h1>
+<p>Name: {{player.name}}</p>
+<p>Age: {{player.age}}</p>
+<p>Position: {{player.position}}</p>
+<p>Goals: {{goals}}</p>
+<h3>additional informations:</h3>
+<ul>
+    <li>Height: {{player.profile.height}}</li>
+    <li>Weight: {{player.profile.weight}}</li>
+    <li>Nationality: {{player.profile.nationality}}</li>
+    <li>{{teams}}</li>
+    <ol>
+        {% for team_reg in player.teamreg_set.all %}
+        <li>
+            <h3>Team: {{team_reg.team.name}}</h3>
+            <p>From: {{team_reg.from_date}}</p>
+            <p>Until: {{team_reg.to_date}}</p>
+        </li>
+        {% endfor %}
+    </ol>
+</ul>
+{% endblock content %}
+
+
+{% block foot %}
+{{foot}}
+{% endblock foot %}
