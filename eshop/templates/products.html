@@ -18,7 +18,7 @@ We proudly present...
 <ol>
     {% for product in products %}
         <li><ul style="list-style: none;">
-            <li style="font-size: large;"><a href="{% url 'eshop_product' product.item %}">{{product.item}}</a></li>
+            <li style="font-size: large;"><a href="{% url 'eshop_filtered' 'item' product.item %}">{{product.item}}</a></li>
             <li style="font-size: small; margin-bottom: 20px;">available: {{product.count}}</li>
         </ul></li>
     {% endfor %}

@@ -50,30 +50,23 @@ class ShopProducts(TemplateView):
             "foot": mark_safe(team_site()),
             }
         return context
+    
 
-class ProductDetail(TemplateView):
-    template_name = "product_detail.html"
-    def get_context_data(self, item):
-        products = Item.objects.filter(item=item)
-        name = item+('s' if not item[-1] == 's' else '')
+class ProductFiltered(TemplateView):
+    template_name = "product_filtered.html"
+    def get_context_data(self, filter, value):
+        if filter != 'price':
+            args = {filter: value}
+            products = Item.objects.filter(**args)
+        else:
+            products = Item.objects.filter(price__lte=value).order_by("-price")
         context = {
             "extra_style":"eshop/style.css",
             "products": products,
-            "header_name":name,
-            "navs": mark_safe(top_links(reverse("eshop_product", args=[name]), "eshop")),
-            "foot": mark_safe(team_site()),
-            }
-        return context
-
-class ProductSizes(TemplateView):
-    template_name = "product_sizes.html"
-    def get_context_data(self, size):
-        products = Item.objects.filter(size=size)
-        context = {
-            "extra_style":"eshop/style.css",
-            "products": products,
-            "size":size,
-            "navs": mark_safe(top_links(reverse("eshop_size", args=[size]), "eshop")),
+            "blocked":[filter],
+            "header_text": f"{filter}: {value}",
+            "summary":f"All Our products matching '{value}':",
+            "navs": mark_safe(top_links(reverse("eshop_filtered", args=[filter, value]), "eshop")),
             "foot": mark_safe(team_site()),
             }
         return context

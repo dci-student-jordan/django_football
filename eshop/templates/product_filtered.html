@@ -1,0 +1,39 @@
+{% extends "basepage.html" %}
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{%static extra_style %}">
+{% endblock %}
+{% block head %}
+{{header_text}}
+{% endblock head %}
+
+
+{% block nav %}
+{{navs}}
+{% endblock nav %}
+
+{% block content %}
+<h1>: {{summary}}</h1>
+<ol>
+{% for product in products %}
+<li>
+    {% if 'item' not in blocked%}
+    <h1><a href="{% url 'eshop_filtered' 'item' product.item %}">{{product.item}}</a></h1>
+    {% endif %}
+    {% if 'description' not in blocked%}
+    <p>description: <a href="{% url 'eshop_filtered' 'description' product.description %}">{{product.description}}</a></p>
+    {% endif %}
+    {% if 'size' not in blocked%}
+    <p>size: <a href="{% url 'eshop_filtered' 'size' product.size %}">{{product.size}}</a></p>
+    {% endif %}
+    <p>price: <a href="{% url 'eshop_filtered' 'price' product.price %}">{{product.price}}</a></p>
+</li>
+{% endfor %}
+{% endblock content %}
+</ol>
+
+
+{% block foot %}
+{{foot}}
+{% endblock foot %}
