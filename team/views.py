@@ -7,42 +7,35 @@ from django.db.models import Count
 from django.db.models.functions import ExtractYear
 from django.db import connection, reset_queries
 from django.utils.safestring import mark_safe
+from templates.shared import top_links, shop_link
 
 
-# Create your views here.
-
-def shop_link():
-    url=reverse("eshop_home")
-    return f"""</br>
-                <h3>Wanna buy from our online Shop?</h3>
-                <a href={url}>e-Shop</a>"""
-
-def top_links(exclude_request):
-    """Navigation links excluding the calling page."""
-    urls =[
-        (reverse("home_page"), "Home"),
-        (reverse("about_page"), f"About"),
-        (reverse("team_page"), f"Team"),
-        (reverse("scores_page"), f"Goals per player"),
-        (reverse("seasons_page"), f"Seasons")
-    ]
-    returnded_urls = ""
-    for url in [url for url in urls if not url[0] == exclude_request]:
-        returnded_urls += f"<a href={url[0]}>{url[1]}</a></br>"
-    return returnded_urls     
+# Create your views here.  
 
 
 class HomePageView(TemplateView):
-    template_name = "home.html"
+    template_name = "simple.html"
     def get_context_data(self):
-        context = {"navs": mark_safe(top_links(reverse("home_page"))), "foot": mark_safe(shop_link())}
+        context = {
+            "extra_style":"team/style.css",
+            "top_header":"Welcome to our favorite team's page!",
+            "content_text":"We love, love, love...",
+            "navs": mark_safe(top_links(reverse("home_page"), "team")),
+            "foot": mark_safe(shop_link())
+            }
         return context
         
     
 class AboutPageView(TemplateView):
-    template_name = "about.html"
+    template_name = "simple.html"
     def get_context_data(self):
-        context = {"navs": mark_safe(top_links(reverse("about_page"))), "foot": mark_safe(shop_link())}
+        context = {
+            "extra_style":"team/style.css",
+            "top_header":"About oue favorite team...",
+            "content_text":"...there's nothing more to say but... LOVE",
+            "navs": mark_safe(top_links(reverse("about_page"), "team")),
+            "foot": mark_safe(shop_link())
+            }
         return context
 
 
@@ -53,9 +46,10 @@ class TeamPageView(TemplateView):
         players = Player.objects.values("id", "name", "position")
         positions = Player.objects.values('position').annotate(count=Count('position'))
         context = {
+            "extra_style":"team/style.css",
             "players":players,
             "positions":positions,
-            "navs": mark_safe(top_links(reverse("team_page"))),
+            "navs": mark_safe(top_links(reverse("team_page"), "team")),
             "foot": mark_safe(shop_link())
         }
         return context
@@ -67,9 +61,10 @@ class PlayerPageView(TemplateView):
     def get_context_data(self, player_id):
         player = Player.objects.get(id=player_id)
         context = {
+            "extra_style":"team/style.css",
             "player":player,
             "goals": GoalsScored.objects.filter(player=player).count(),
-            "navs": mark_safe(top_links(reverse("player_data", args=[1]))),
+            "navs": mark_safe(top_links(reverse("player_data", args=[1]), "team")),
             "foot": mark_safe(shop_link())
         }
         if player.teams.exists():
@@ -85,8 +80,9 @@ class ScorerPageView(TemplateView):
     def get_context_data(self):
         players = Player.objects.annotate(total_goals=Count('goals_scored')).order_by('-total_goals')
         return {
+            "extra_style":"team/style.css",
             "players":players,
-            "navs": mark_safe(top_links(reverse("scores_page"))),
+            "navs": mark_safe(top_links(reverse("scores_page"), "team")),
             "foot": mark_safe(shop_link())
         }
 
@@ -141,7 +137,8 @@ class SeasonsPageView(TemplateView):
 
     def get_context_data(self):
         return {
+            "extra_style":"team/style.css",
             "years":self.sorted_result,
-            "navs": mark_safe(top_links(reverse("seasons_page"))),
+            "navs": mark_safe(top_links(reverse("seasons_page"), "team")),
             "foot": mark_safe(shop_link())
         }

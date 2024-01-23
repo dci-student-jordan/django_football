@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{%static extra_style %}">
 {% endblock %}
 {% block head %}
-Scorers of our favorite Team
+Products per size:
 {% endblock head %}
 
 
@@ -14,16 +14,16 @@ Scorers of our favorite Team
 {% endblock nav %}
 
 {% block content %}
-<h1>Here are our players, ordered by goals:</h1>
-<ul>
-    {% for player in players %}
-    <li>
-        <h3><a href="{% url 'player_data' player.id %}">{{player.name}}</a></h3>
-        <p>number of goals: {{player.total_goals}}</p>
-        </ol>
-    </li>
+<h1>Available products of size {{size}}:</h1>
+<ol>
+    {% for product in products %}
+        <li>
+            <h1>: <a href="{% url 'eshop_product' product.item %}">{{product.item}}</a></h1>
+            <p>description: {{product.description}}</p>
+            <p>price: {{product.price}}</p>
+        </li>
     {% endfor %}
-</ul>
+</ol>
 {% endblock content %}
 
 

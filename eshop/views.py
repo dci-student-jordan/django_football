@@ -3,145 +3,77 @@ from django.urls import reverse
 from .models import Item
 from django.db.models import Count
 from django.db import connection, reset_queries
+from django.views.generic.base import TemplateView
+from templates.shared import top_links, team_site
+from django.utils.safestring import mark_safe
 
 # Create your views here.
-
-def team_site():
-    url=reverse("home_page")
-    return f"""</br>
-                <h3>Our favorite Team:</h3>
-                <a href={url}>homepage</a>"""
-
 
 def url_for_size(size):
     return f"<a href={reverse('eshop_size', args=[size])}>{size}</a>"
 
-def eshopHome(request):
-    url1=reverse("eshop_about")
-    url2=reverse("eshop_products")
-    page = f"""
-     <!DOCTYPE html>
-        <html>
-            <body>
 
-                <h1>Welcome to the e-Shop of our favorite Team!</h1>
-                <a href={url1}>about</a><br>
-                <a href={url2}>Products</a>
-                {team_site()}
-            </body>
-        </html> 
-    """
-    return HttpResponse(page)
-
-def about(request):
-    url1=reverse("eshop_home")
-    page = f"""
-     <!DOCTYPE html>
-        <html>
-            <body>
-
-                <h1>About e-Shop</h1>
-                <a href={url1}>e-Shop home</a>
-                <p>CONTACT</p>
-                {team_site()}
-            </body>
-        </html> 
-    """
-    return HttpResponse(page)
-
-def e_products(request):
-    """List all products counted as links to product-page"""
-    reset_queries()
-    url1=reverse("eshop_home")
-    url2=reverse("eshop_about")
-    page_part1 = f"""
-     <!DOCTYPE html>
-        <html>
-            <body>
-
-                <a href={url1}>e-Shop home</a><br>
-                <a href={url2}>about e-Shop</a>
-                <h1>Here are our products:</h1>
-                <h3>For sorted by size chose here:</h3>
-                <p>{url_for_size('XS')} | {url_for_size('S')} | {url_for_size('M')} | {url_for_size('L')} | {url_for_size('XL')}</p>
-                <ul>"""
+class EhomePageView(TemplateView):
+    template_name = "simple.html"
+    def get_context_data(self):
+        context = {
+            "extra_style":"eshop/style.css",
+            "top_header":"Welcome to our favorite team's eshop!",
+            "content_text":"Here you can find the best merchandise stuff ever.",
+            "navs": mark_safe(top_links(reverse("eshop_home"), "eshop")),
+            "foot": mark_safe(team_site())
+            }
+        return context
+        
     
-    for product in Item.objects.values("item").annotate(count=Count('item')):
-        num_prod = product["count"]
-        product_url = reverse("eshop_product", args=[product["item"]])
-        page_part1 += f"""<li>
-                            <h3><a href={product_url}>{product["item"]}</a></h3>
-                            <p>Available: {num_prod}</p>
-                        </li>"""
-    
-    page_part2 = f"""
-                </ul>
-                {team_site()}
-            </body>
-        </html> 
-    """
-    print(connection.queries)
-    return HttpResponse(page_part1+page_part2)
+class EaboutPageView(TemplateView):
+    template_name = "simple.html"
+    def get_context_data(self):
+        context = {
+            "extra_style":"eshop/style.css",
+            "top_header":"About our favorite team's eshop",
+            "content_text":"Support our favorite team and... BUY!",
+            "navs": mark_safe(top_links(reverse("eshop_about"), "eshop")),
+            "foot": mark_safe(team_site())
+            }
+        return context
 
-def product(request, item):
-    reset_queries()
-    url = reverse("eshop_home")
-    url2 = reverse("eshop_products")
-    shop_items = Item.objects.filter(item=item)
-    page = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <title>{item}</title>
-    </head>
-    <body>
-    <a href = "{url}">eShop Home</a></br>
-    <a href = "{url2}">Products</a>
-    <h1>Available {item}{'s' if not item[-1] == 's' else ''}:</h1><ol>"""
-    index = 1
-    for itm in shop_items:
-        page += f"""
-        <li>
-            <h3>{item} {index}:</h3>
-            <p>DESCRIPTION: {itm.description}</p>
-            <p>SIZE: {url_for_size(itm.size)}</p>
-            <p>PRICE: {itm.price}</p>
-        </li>"""
-        index += 1
-    page += f"""</ol>
-    {team_site()}
-    </body>
-    </html>
-    """
-    print(connection.queries)
-    return HttpResponse(page)
 
-def e_sizes(request, size):
-    reset_queries()
-    url = reverse("eshop_home")
-    url2 = reverse("eshop_products")
-    shop_items = Item.objects.filter(size=size)
-    page = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <title>{size}</title>
-    </head>
-    <body>
-    <a href = "{url}">eShop Home</a></br>
-    <a href = "{url2}">Products</a>
-    <h1>Available Products of size {size}:</h1><ol>"""
-    for itm in shop_items:
-        page += f"""
-        <li>
-            <h3>{itm.item}:</h3>
-            <p>DESCRIPTION: {itm.description}</p>
-            <p>PRICE: {itm.price}</p>
-        </li>"""
-    page += f"""</ol>
-    {team_site()}
-    </body>
-    </html>
-    """
-    print(connection.queries)
-    return HttpResponse(page)
+class ShopProducts(TemplateView):
+    template_name = "products.html"
+    def get_context_data(self):
+        products = Item.objects.values("item").annotate(count=Count('item'))
+        context = {
+            "extra_style":"eshop/style.css",
+            "products": products,
+            "navs": mark_safe(top_links(reverse("eshop_products"), "eshop")),
+            "foot": mark_safe(team_site()),
+            }
+        return context
+
+class ProductDetail(TemplateView):
+    template_name = "product_detail.html"
+    def get_context_data(self, item):
+        products = Item.objects.filter(item=item)
+        name = item+('s' if not item[-1] == 's' else '')
+        context = {
+            "extra_style":"eshop/style.css",
+            "products": products,
+            "header_name":name,
+            "navs": mark_safe(top_links(reverse("eshop_product", args=[name]), "eshop")),
+            "foot": mark_safe(team_site()),
+            }
+        return context
+
+class ProductSizes(TemplateView):
+    template_name = "product_sizes.html"
+    def get_context_data(self, size):
+        products = Item.objects.filter(size=size)
+        context = {
+            "extra_style":"eshop/style.css",
+            "products": products,
+            "size":size,
+            "navs": mark_safe(top_links(reverse("eshop_size", args=[size]), "eshop")),
+            "foot": mark_safe(team_site()),
+            }
+        return context

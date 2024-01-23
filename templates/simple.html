@@ -1,7 +1,12 @@
 {% extends "basepage.html" %}
 
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{%static extra_style %}">
+{% endblock %}
+
 {% block head %}
-Home of our favorite Team
+{{top_header}}
 {% endblock head %}
 
 
@@ -10,7 +15,7 @@ Home of our favorite Team
 {% endblock nav %}
 
 {% block content %}
-This is the Home
+{{content_text}}
 {% endblock content %}
 
 

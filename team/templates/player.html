@@ -1,5 +1,9 @@
 {% extends "basepage.html" %}
 
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{%static extra_style %}">
+{% endblock %}
 {% block head %}
 Player of our favorite Team
 {% endblock head %}

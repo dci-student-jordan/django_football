@@ -1,0 +1,15 @@
+body {
+    background-image: url("bg.jpeg");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+main {
+    flex: 1;;
+    overflow-y: auto; /* Enable vertical scrolling for content */
+    backdrop-filter: blur(7px); /* Adjust the blur amount as needed */
+    -webkit-backdrop-filter: blur(7px);
+}

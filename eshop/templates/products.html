@@ -1,0 +1,31 @@
+{% extends "basepage.html" %}
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{%static extra_style %}">
+{% endblock %}
+{% block head %}
+We proudly present...
+{% endblock head %}
+
+
+{% block nav %}
+{{navs}}
+{% endblock nav %}
+
+{% block content %}
+<h1>Here are our products:</h1>
+<ol>
+    {% for product in products %}
+        <li><ul style="list-style: none;">
+            <li style="font-size: large;"><a href="{% url 'eshop_product' product.item %}">{{product.item}}</a></li>
+            <li style="font-size: small; margin-bottom: 20px;">available: {{product.count}}</li>
+        </ul></li>
+    {% endfor %}
+</ol>
+{% endblock content %}
+
+
+{% block foot %}
+{{foot}}
+{% endblock foot %}

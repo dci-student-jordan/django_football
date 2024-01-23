@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <title>Our favorite Team</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+        {% block extra_css %}{% endblock %}
+    </head>
+    <body><main>
+        <header>
+            <h1>{% block head %} {% endblock head %}</h1>
+        </header>
+        <section>
+        <nav>
+            <ul>
+                {% block nav %} {% endblock nav %}
+            </ul>
+        </nav>
+
+        <article>
+            {% block content %} {% endblock content %}
+        </article>
+    </section>
+    <footer>
+        {% block foot %} {% endblock foot %}
+    </footer></main>
+    </body>
+    </html>
+</html>
