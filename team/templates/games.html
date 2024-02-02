@@ -1,0 +1,43 @@
+{% extends "basepage.html" %}
+{% load custom_filters %}
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{%static extra_style %}">
+{% endblock %}
+{% block head %}
+Scorers of our favorite Team
+{% endblock head %}
+
+
+{% block nav %}
+{{navs}}
+{% endblock nav %}
+
+{% block content %}
+<h1>Here are all games we played until now, ordered by goals:</h1>
+<ul>
+    {% for game in games %}
+    <li>
+        <ul>
+            <li><h2>On {{ game.game.game_date }} we played against {{ game.game.opponent }} and scored {{ game.game.score }} goals:</h2></li>
+            <li>
+                <h4>Goals:</h4>
+                <ol>
+                    {% with gamegoal = game_goals|return_id: game_id %}
+                        {% for goal in gamegoal %}
+                            <p>Minute: {{ goal.0 }}, Scorer: {{goal.1}}</p>
+                        {% endfor %}
+                    {% endwith %}
+                </ol>
+            </li>
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock content %}
+
+
+{% block foot %}
+{{foot}}
+{% endblock foot %}

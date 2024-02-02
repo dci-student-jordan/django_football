@@ -19,7 +19,8 @@ def top_links(exclude_request, app):
             (reverse("about_page"), prefix+"About"),
             (reverse("team_page"), prefix+"Team"),
             (reverse("scores_page"), prefix+"Goals per player"),
-            (reverse("seasons_page"), prefix+"Seasons")
+            (reverse("seasons_page"), prefix+"Seasons"),
+            (reverse("games_page"), prefix+"Games"),
         ]:
             urls.append(url)
     if "eshop" in app:

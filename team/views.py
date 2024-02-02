@@ -2,7 +2,7 @@ from typing import Any
 from django.views.generic.base import TemplateView
 from django.urls import reverse
 from .models import Player, GoalsScored, Games
-from django.db.models import Count
+from django.db.models import Count, F
 from django.db.models.functions import ExtractYear
 from django.utils.safestring import mark_safe
 from templates.shared import top_links, shop_link
@@ -142,3 +142,28 @@ class SeasonsPageView(TemplateView):
             "foot": mark_safe(shop_link())
         }
  
+
+class GamesPageView(TemplateView):
+    template_name = "games.html"
+
+    def get_context_data(self, **kwargs):
+        games = Games.objects.all().order_by('pk')
+        goals = GoalsScored.objects.select_related('game').order_by('game__game_date').order_by('game__pk')
+
+        game_goals = []
+        for i in range (len(goals)):
+            goal = goals[i]
+            if not goal.game in game_goals:
+                game_goals[goal.game] = ([(goal.minute, goal.player)], ())
+            else:
+                game_goals[goal.game].append((goal.minute, goal.player))
+
+        context = {
+            "extra_style": "team/style.css",
+            "games": games,
+            "goals": game_goals,
+            "navs": mark_safe(top_links(reverse("games_page"), ["team"])),
+            "foot": mark_safe(shop_link())
+        }
+        return context
+
