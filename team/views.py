@@ -1,13 +1,12 @@
 from typing import Any
-from django.shortcuts import HttpResponse
 from django.views.generic.base import TemplateView
 from django.urls import reverse
-from .models import Player, GoalsScored, Games, PlayerProfile, Team
+from .models import Player, GoalsScored, Games
 from django.db.models import Count
 from django.db.models.functions import ExtractYear
-from django.db import connection, reset_queries
 from django.utils.safestring import mark_safe
 from templates.shared import top_links, shop_link
+
 
 
 # Create your views here.  
@@ -20,7 +19,7 @@ class HomePageView(TemplateView):
             "extra_style":"team/style.css",
             "top_header":"Welcome to our favorite team's page!",
             "content_text":"We love, love, love...",
-            "navs": mark_safe(top_links(reverse("home_page"), "team")),
+            "navs": mark_safe(top_links(reverse("home_page"), ["team"])),
             "foot": mark_safe(shop_link())
             }
         return context
@@ -33,7 +32,7 @@ class AboutPageView(TemplateView):
             "extra_style":"team/style.css",
             "top_header":"About oue favorite team...",
             "content_text":"...there's nothing more to say but... LOVE",
-            "navs": mark_safe(top_links(reverse("about_page"), "team")),
+            "navs": mark_safe(top_links(reverse("about_page"), ["team"])),
             "foot": mark_safe(shop_link())
             }
         return context
@@ -49,7 +48,7 @@ class TeamPageView(TemplateView):
             "extra_style":"team/style.css",
             "players":players,
             "positions":positions,
-            "navs": mark_safe(top_links(reverse("team_page"), "team")),
+            "navs": mark_safe(top_links(reverse("team_page"), ["team"])),
             "foot": mark_safe(shop_link())
         }
         return context
@@ -64,7 +63,7 @@ class PlayerPageView(TemplateView):
             "extra_style":"team/style.css",
             "player":player,
             "goals": GoalsScored.objects.filter(player=player).count(),
-            "navs": mark_safe(top_links(reverse("player_data", args=[1]), "team")),
+            "navs": mark_safe(top_links(reverse("player_data", args=[1]), ["team"])),
             "foot": mark_safe(shop_link())
         }
         if player.teams.exists():
@@ -82,7 +81,7 @@ class ScorerPageView(TemplateView):
         return {
             "extra_style":"team/style.css",
             "players":players,
-            "navs": mark_safe(top_links(reverse("scores_page"), "team")),
+            "navs": mark_safe(top_links(reverse("scores_page"), ["team"])),
             "foot": mark_safe(shop_link())
         }
 
@@ -139,6 +138,7 @@ class SeasonsPageView(TemplateView):
         return {
             "extra_style":"team/style.css",
             "years":self.sorted_result,
-            "navs": mark_safe(top_links(reverse("seasons_page"), "team")),
+            "navs": mark_safe(top_links(reverse("seasons_page"), ["team"])),
             "foot": mark_safe(shop_link())
         }
+ 

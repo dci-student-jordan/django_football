@@ -28,6 +28,9 @@
     <p>size: <a href="{% url 'eshop_filtered' 'size' product.size %}">{{product.size}}</a></p>
     {% endif %}
     <p>price: <a href="{% url 'eshop_filtered' 'price' product.price %}">{{product.price}}</a></p>
+    {% if user.is_authenticated %}
+        <p><a href="{% url 'order' %}?item_id={{product.pk}}">Order</a></p>
+    {% endif %}
 </li>
 {% endfor %}
 {% endblock content %}

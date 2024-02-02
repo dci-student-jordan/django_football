@@ -1,0 +1,104 @@
+{% extends "basepage.html" %}
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{%static extra_style %}">
+{% endblock %}
+
+{% block head %}
+{{top_header}}
+{% endblock head %}
+
+
+{% block nav %}
+{{navs}}
+{% endblock nav %}
+
+{% block content %}
+{{content_text}}
+<form method="post" action="{% url 'order' %}" id="order-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p>
+        <input type="submit" name="submit_input" value="Submit Input">
+    </p>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const itemSelect = document.getElementById('id_item');
+        const descriptionSelect = document.getElementById('id_description');
+        const sizeSelect = document.getElementById('id_size');
+        const numberSelect = document.getElementById('id_number');
+
+        fetchAndUpdate = function () {// Make an AJAX request to get updated details
+            const selectedDescr = descriptionSelect.value;
+            const selectedItem = itemSelect.value;
+            const selectedSize = sizeSelect.value;
+            fetch('{% url "get_item_details" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: `item_name=${selectedItem}&item_descr=${selectedDescr}&item_size=${selectedSize}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the options in description and size selects
+                updateSelectOptions(descriptionSelect, data.descriptions);
+                updateSelectOptions(sizeSelect, data.sizes);
+                numberSelect.setAttribute('max', data.numbers);
+                console.log("MAX", data.numbers)
+                
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    
+        itemSelect.addEventListener('change', function () {
+            fetchAndUpdate ()
+            
+        });
+
+        descriptionSelect.addEventListener('change', function () {
+            fetchAndUpdate()
+        });
+
+        sizeSelect.addEventListener('change', function () {
+            fetchAndUpdate()
+        });
+    
+        function updateSelectOptions(selectElement, options) {
+            const selectedValue = selectElement.value;
+
+            // Clear existing options
+            selectElement.innerHTML = '';
+
+            // Add new options
+            options.forEach(option => {
+                // Check if the option already exists
+                if (!selectElement.querySelector(`option[value="${option}"]`)) {
+                    // If not, create and add the new option
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option;
+                    optionElement.text = option;
+                    selectElement.add(optionElement);
+                }
+            });
+
+            // Reselect the option if it's still in the updated options
+            if (options.includes(selectedValue)) {
+                selectElement.value = selectedValue;
+            }
+            else {
+                selectElement.selectedIndex = 0
+            }
+        }
+    });
+</script>
+{% endblock content %}
+
+
+{% block foot %}
+{{foot}}
+{% endblock foot %}

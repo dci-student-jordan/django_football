@@ -2,7 +2,7 @@
 
 {% load static %}
 {% block extra_css %}
-    <link rel="stylesheet" href="{%static extra_style %}">
+    <link rel="stylesheet" href="{% static extra_style %}">
 {% endblock %}
 
 {% block head %}
@@ -12,6 +12,11 @@
 
 {% block nav %}
 {{navs}}
+{% if user.is_authenticated%}
+    <ul>
+        <h4><a href="{% url 'order' %}">Go Shopping</a></h4>
+    </ul>
+{% endif %}
 {% endblock nav %}
 
 {% block content %}

@@ -17,6 +17,40 @@
             <ul>
                 {% block nav %} {% endblock nav %}
             </ul>
+            <ul>
+                </br>
+            </ul>
+            {% if user.is_authenticated %}
+            <ul>
+                <p>You're logged in as {{ user.username }}!</p>
+            </ul>
+            <ul>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-link">logout</button>
+            </form>
+            {% if Action != 'Update' %}
+                {% csrf_token %}
+                <form action="{% url 'update' user.id %}">
+                    <button type="submit" class="btn-link">account</button>
+                </form>
+            {% endif %}
+            </ul>
+            {% else %}
+            <ul>
+                <p>You're not logged in.</p>
+            </ul>
+            {% if Action != 'Log in' %}
+                <ul>
+                    <a href="{% url 'login' %}">Log In</a>
+                </ul>
+            {% endif %}
+            {% if Action != 'Sign up' %}
+            <ul>
+                <a href="{% url 'signup' %}">Sign Up</a>
+            </ul>
+            {% endif %}
+            {% endif %}
         </nav>
 
         <article>

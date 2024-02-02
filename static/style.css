@@ -14,12 +14,15 @@ main {
     overflow-y: auto; /* Enable vertical scrolling for content */
     backdrop-filter: blur(15px); /* Adjust the blur amount as needed */
     -webkit-backdrop-filter: blur(15px);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Minimum height of the viewport */
+    margin: 0;
 }
 
 body {
     display: flex;
     flex-direction: column;
-    height: 100vh;
 }
 
 
@@ -36,8 +39,7 @@ header {
 nav {
     float: left;
     width: 30%;
-    height: 300px;
-    /* only for demonstration, should be removed */
+    height: 100%;
     background: #cccccc7e;
     padding: 20px;
 }

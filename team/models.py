@@ -1,11 +1,13 @@
 from django.db import models
 
+
 class Team(models.Model):
     """Model for Teams"""
     name = models.CharField(max_length=100)
     town = models.CharField(max_length=100)
     color = models.CharField(max_length=100)
 
+    
 class PlayerProfile(models.Model):
     """Model for additional informations about Players."""
     height = models.PositiveIntegerField()

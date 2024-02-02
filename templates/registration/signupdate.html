@@ -1,0 +1,18 @@
+{% extends "simple.html" %}7
+
+{% block content %}
+<h2>{{Action}}</h2>
+<form method="post">
+{% csrf_token %}
+{{ form.as_p }}
+<button type="submit">{{Action}}</button>
+</form>
+{% if user_activities %}
+    <h2>Your activities:</h2>
+{% endif %}
+{% for activity in user_activities %}
+    <li>
+        <p>{{activity}}</p>
+    </li>
+{% endfor %}
+{% endblock content %}
