@@ -57,7 +57,7 @@ def populate_goals():
     """randomly populate the goalsscored table"""
     player_ids = Player.objects.values_list("id", flat=True)
     for game in Games.objects.all():
-        for goal in range(1, game.score):
+        for goal in range(game.score):
             GoalsScored.objects.create(game_id=game.pk, minute=random.randint(0,59), player_id=random.choice(player_ids))
 
 def update_goals():

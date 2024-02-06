@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Team(models.Model):
@@ -53,3 +54,9 @@ class GoalsScored(models.Model):
     game = models.ForeignKey(Games, on_delete=models.CASCADE)
     minute = models.PositiveIntegerField()
     player = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="goals_scored")
+
+class OpponentScoresUserUpated(models.Model):
+    game = models.ForeignKey(Games, on_delete=models.CASCADE)
+    score = models.PositiveIntegerField()
+    update_time = models.DateTimeField(auto_now=True)
+    update_user = models.ForeignKey(User, on_delete=models.CASCADE)

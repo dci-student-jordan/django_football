@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{%static extra_style %}">
 {% endblock %}
 {% block head %}
-Scorers of our favorite Team
+Games of our favorite Team
 {% endblock head %}
 
 
@@ -15,20 +15,18 @@ Scorers of our favorite Team
 {% endblock nav %}
 
 {% block content %}
-<h1>Here are all games we played until now, ordered by goals:</h1>
+<h2>Here are all games we played until now:</h2>
 <ul>
     {% for game in games %}
     <li>
         <ul>
-            <li><h2>On {{ game.game.game_date }} we played against {{ game.game.opponent }} and scored {{ game.game.score }} goals:</h2></li>
+            <li><h1><a href="{% url 'game_page' game.pk %}">On {{ game.game_date }} we played against {{ game.opponent }} and scored {{ game.score }} goals:</a></h1></li>
             <li>
                 <h4>Goals:</h4>
                 <ol>
-                    {% with gamegoal = game_goals|return_id: game_id %}
-                        {% for goal in gamegoal %}
-                            <p>Minute: {{ goal.0 }}, Scorer: {{goal.1}}</p>
-                        {% endfor %}
-                    {% endwith %}
+                    {% for goal in game.goals_scored.all %}
+                        <p>Minute: {{ goal.minute }}, Scorer: <a href="{% url 'player_data' goal.player.id %}">{{goal.player.name}}</a></p>
+                    {% endfor %}
                 </ol>
             </li>
         </ul>

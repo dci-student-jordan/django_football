@@ -1,0 +1,55 @@
+{% extends "basepage.html" %}
+{% load custom_filters %}
+
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{%static extra_style %}">
+{% endblock %}
+{% block head %}
+A game of our favorite Team
+{% endblock head %}
+
+
+{% block nav %}
+{{navs}}
+{% endblock nav %}
+
+{% block content %}
+<h2>On {{game.game_date}} we played against {{game.opponent}} and scored {{game.score}} goals:</h2>
+<ol>
+    {% for goal in goals %}
+        <p>Minute: {{ goal.minute }}, Scorer: <a href="{% url 'player_data' goal.player.id %}">{{goal.player.name}}</a></p>
+    {% endfor %}
+</ol>
+{% if updated_opponent and not update %}
+    <h4>The {{ game.opponent }} placed 
+        {% if user.is_authenticated %}
+            <a href="{% url 'game_page' game.id %}?update=True" title="You don't agree, {{ user.first_name }}? Click to correct!">{{ updated_opponent.score }} goals</a>
+        {% else %}
+            {{ updated_opponent.score }} goals
+        {% endif %}
+    </h4>    
+    <p>(updated by {{updated_opponent.update_user}} on {{updated_opponent.update_time}}.)</p>
+{% elif user.is_authenticated and not update  %}
+<h4>{{user.first_name}}, we need your help!</h4>
+<p>Unfortunately we cannot remember exactly the score the {{game.opponent}} placed.</p>
+<p>If you were there on the {{ game.game_date|date:'j'|ordinal }} of {{ game.game_date|date:'F' }} in {{game.game_date|date:'Y'}}, you can help us update our database here:</p>
+{% elif user.is_authenticated and update  %}
+<h4>Correct the score the {{game.opponent}} placed according to {{updated_opponent.update_user}} here:</h4>
+<p>Score for the {{ game.game_date|date:'j'|ordinal }} of {{ game.game_date|date:'F' }} in {{game.game_date|date:'Y'}}:</p>
+{% endif %}
+{% if user.is_authenticated and not block_form %}
+<form method="post" action="{% url 'game_page' game.id%}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p>
+        <input type="submit" name="submit_input" value="Submit Input">
+    </p>
+</form>
+{% endif %}
+{% endblock content %}
+
+
+{% block foot %}
+{{foot}}
+{% endblock foot %}

@@ -25,13 +25,13 @@
                 <p>You're logged in as {{ user.username }}!</p>
             </ul>
             <ul>
-            <form method="post" action="{% url 'logout' %}">
+            <form method="post" action="{% url 'logout' %}?next={{ request.path }}">
                 {% csrf_token %}
                 <button type="submit" class="btn-link">logout</button>
             </form>
             {% if Action != 'Update' %}
                 {% csrf_token %}
-                <form action="{% url 'update' user.id %}">
+                <form action="{% url 'update' user.id %}?next={{ request.path }}">
                     <button type="submit" class="btn-link">account</button>
                 </form>
             {% endif %}
@@ -42,12 +42,12 @@
             </ul>
             {% if Action != 'Log in' %}
                 <ul>
-                    <a href="{% url 'login' %}">Log In</a>
+                    <a href="{% url 'login' %}?next={{ request.path }}">Log In</a>
                 </ul>
             {% endif %}
             {% if Action != 'Sign up' %}
             <ul>
-                <a href="{% url 'signup' %}">Sign Up</a>
+                <a href="{% url 'signup' %}?next={{ request.path }}">Sign Up</a>
             </ul>
             {% endif %}
             {% endif %}

@@ -1,11 +1,16 @@
 from typing import Any
+from django.http import HttpRequest, HttpResponse
 from django.views.generic.base import TemplateView
+from django.views.generic.edit import FormView
 from django.urls import reverse
-from .models import Player, GoalsScored, Games
+from django.shortcuts import redirect
+from .models import Player, GoalsScored, Games, OpponentScoresUserUpated
 from django.db.models import Count, F
 from django.db.models.functions import ExtractYear
 from django.utils.safestring import mark_safe
 from templates.shared import top_links, shop_link
+from .forms import UserUpdateGameForm
+from django.db.models import Prefetch
 
 
 
@@ -147,23 +152,63 @@ class GamesPageView(TemplateView):
     template_name = "games.html"
 
     def get_context_data(self, **kwargs):
-        games = Games.objects.all().order_by('pk')
-        goals = GoalsScored.objects.select_related('game').order_by('game__game_date').order_by('game__pk')
-
-        game_goals = []
-        for i in range (len(goals)):
-            goal = goals[i]
-            if not goal.game in game_goals:
-                game_goals[goal.game] = ([(goal.minute, goal.player)], ())
-            else:
-                game_goals[goal.game].append((goal.minute, goal.player))
+        games = Games.objects.all().order_by('-game_date').prefetch_related(
+            Prefetch('goalsscored_set', queryset=GoalsScored.objects.select_related('player'))
+        )
 
         context = {
             "extra_style": "team/style.css",
             "games": games,
-            "goals": game_goals,
             "navs": mark_safe(top_links(reverse("games_page"), ["team"])),
             "foot": mark_safe(shop_link())
         }
         return context
+    
 
+class GamePageView(FormView):
+    template_name = "game.html"
+    form_class = UserUpdateGameForm
+
+    def get(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        self.update = request.GET.get("update")
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form: Any):
+        game_id = self.kwargs['game_id']
+        form.instance.game_id = game_id
+        form.instance.update_user = self.request.user
+        form.save()
+        return redirect('game_page', game_id=form.instance.game_id)
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.game_id = self.kwargs['game_id']
+        try:
+            if self.update:
+                form.fields['score'].initial = OpponentScoresUserUpated.objects.filter(game=form.game_id).last().score
+        except:
+            pass
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        game_id = self.kwargs.get('game_id')
+        if OpponentScoresUserUpated.objects.filter(game=game_id).count():
+            op_score = OpponentScoresUserUpated.objects.filter(game=game_id).last()
+            context['updated_opponent'] = op_score
+            if not self.update:
+                context['block_form'] = True
+        game = Games.objects.get(pk=game_id)
+        goals = GoalsScored.objects.filter(game=game_id)
+
+        context.update({
+            "update":self.update,
+            "extra_style": "team/style.css",
+            "game": game,
+            "goals": goals,
+            "navs": mark_safe(top_links(reverse("eshop_home"), ["team"])),
+            "foot": mark_safe(shop_link())
+        })
+
+        return context
+    

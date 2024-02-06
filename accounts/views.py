@@ -26,6 +26,9 @@ class LoginView(FormView):
 
         if user is not None:
             login(self.request, user)
+            if user.is_authenticated:
+                self.success_url = self.request.GET.get('next', '/')
+                # return redirect(next_url)
             return super().form_valid(form)
         else:
             # Handle invalid login
@@ -51,8 +54,11 @@ class SignUpView(CreateView):
         
         # Log in the user after successful registration
         login(self.request, self.object)
+        if self.request.user.is_authenticated:
+            self.success_url = self.request.GET.get('next', '/')
 
         return response
+    
     def get_context_data(self, **kwargs: Any):
         context = super().get_context_data(**kwargs)
         context["extra_style"] = "accounts/style.css"
@@ -67,6 +73,8 @@ class UpdateUserView(LoginRequiredMixin, UpdateView):
         print("GET:", request)
         if self.get_object().pk != request.user.pk:
             return redirect('login')
+        elif self.user.is_authenticated:
+            self.success_url = self.request.GET.get('next', '/')
         return super().get(request, *args, **kwargs)
     
     model = User
@@ -80,6 +88,5 @@ class UpdateUserView(LoginRequiredMixin, UpdateView):
         context["foot"] = mark_safe(team_site()+shop_link())
         context["Action"] = "Update"
         user_activities = Order.objects.filter(user_id=self.request.user.id)
-        print(user_activities)
         context["user_activities"] = [f"Bought a {act}" for act in user_activities]
         return context
