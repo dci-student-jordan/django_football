@@ -19,7 +19,7 @@
 {% for product in products %}
 <li>
     {% if 'item' not in blocked%}
-    <h1><a href="{% url 'eshop_filtered' 'item' product.item %}">{{product.item}}</a></h1>
+    <h3><a href="{% url 'eshop_filtered' 'item' product.item %}">{{product.item}}</a></h3>
     {% endif %}
     {% if 'description' not in blocked%}
     <p>description: <a href="{% url 'eshop_filtered' 'description' product.description %}">{{product.description}}</a></p>
@@ -29,7 +29,7 @@
     {% endif %}
     <p>price: <a href="{% url 'eshop_filtered' 'price' product.price %}">{{product.price}}</a></p>
     {% if user.is_authenticated %}
-        <p><a href="{% url 'order' %}?item_id={{product.pk}}">Order</a></p>
+        <p><a href="{% url 'order' %}?item_id={{product.pk}}" class="btn btn-outline-success">Order</a></p>
     {% endif %}
 </li>
 {% endfor %}

@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'team',
     'eshop',
     'man_pop',
+    "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [
@@ -130,3 +132,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "eshop_home"
 LOGOUT_REDIRECT_URL = "eshop_home"
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'

@@ -10,8 +10,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login, authenticate
 from .forms import LoginForm
+from team.models import OpponentScoresUserUpated
 from django.views.generic.edit import FormView
 from eshop.models import Order
+from django.utils.dateformat import format
 
 
 class LoginView(FormView):
@@ -73,7 +75,7 @@ class UpdateUserView(LoginRequiredMixin, UpdateView):
         print("GET:", request)
         if self.get_object().pk != request.user.pk:
             return redirect('login')
-        elif self.user.is_authenticated:
+        elif request.user.is_authenticated:
             self.success_url = self.request.GET.get('next', '/')
         return super().get(request, *args, **kwargs)
     
@@ -87,6 +89,9 @@ class UpdateUserView(LoginRequiredMixin, UpdateView):
         context["navs"] = mark_safe(top_links(reverse("update", args=[0]), ["team", "eshop"]))
         context["foot"] = mark_safe(team_site()+shop_link())
         context["Action"] = "Update"
-        user_activities = Order.objects.filter(user_id=self.request.user.id)
-        context["user_activities"] = [f"Bought a {act}" for act in user_activities]
+        query_user_activities = Order.objects.filter(user_id=self.request.user.id)
+        user_activities = [f"Bought a {act}" for act in query_user_activities]
+        for update in OpponentScoresUserUpated.objects.filter(update_user=self.request.user.id).distinct():
+            user_activities.append(f"Updated the score of the game against {update.game.opponent} on {update.game.game_date} to '{update.score}' on {update.update_time.strftime('%A, %B %d, %Y, %I:%M %p')}")
+        context["user_activities"] = user_activities
         return context

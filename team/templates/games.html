@@ -20,11 +20,11 @@ Games of our favorite Team
     {% for game in games %}
     <li>
         <ul>
-            <li><h1><a href="{% url 'game_page' game.pk %}">On {{ game.game_date }} we played against {{ game.opponent }} and scored {{ game.score }} goals:</a></h1></li>
+            <li><h3><a href="{% url 'game_page' game.pk %}">On {{ game.game_date }} we played against {{ game.opponent }} and scored {{ game.score }} goals:</a></h3></li>
             <li>
                 <h4>Goals:</h4>
                 <ol>
-                    {% for goal in game.goals_scored.all %}
+                    {% for goal in game.goalsscored_set.all %}
                         <p>Minute: {{ goal.minute }}, Scorer: <a href="{% url 'player_data' goal.player.id %}">{{goal.player.name}}</a></p>
                     {% endfor %}
                 </ol>

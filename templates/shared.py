@@ -4,8 +4,8 @@ from django.urls import reverse
 def shop_link():
     url=reverse("eshop_home")
     return f"""</br>
-                <h3>Wanna buy from our online Shop?</h3>
-                <a href={url}>e-Shop</a>"""
+                <h5><a href={url}>Wanna buy from our online Shop?</a></h5>
+                """
 
 def top_links(exclude_request, app):
     """Navigation links excluding the calling page."""
@@ -34,12 +34,12 @@ def top_links(exclude_request, app):
             urls.append(url)
     returnded_urls = ""
     for url in [url for url in urls if not url[0] == exclude_request]:
-        returnded_urls += f"<a href={url[0]}>{url[1]}</a></br>"
+        returnded_urls += f'<a href={url[0]} class="list-group-item  custom-list-item">{url[1]}</a></br>'
     return returnded_urls
 
 
 def team_site():
     url=reverse("home_page")
     return f"""</br>
-                <h3>Our favorite Team:</h3>
-                <a href={url}>homepage</a>"""
+                <h5><a href={url}>Our favorite Team</a></h5>
+                """
