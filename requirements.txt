@@ -1,2 +1,4 @@
 django
 faker
+django_crispy-forms
+crispy-bootstrap5
