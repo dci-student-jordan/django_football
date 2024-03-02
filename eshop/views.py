@@ -1,8 +1,8 @@
 from typing import Any
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.shortcuts import redirect
 from .models import Item, SIZE_CHOICES
 from django.db.models import Count
-# from django.db import connection, reset_queries
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from templates.shared import top_links, team_site
@@ -11,6 +11,7 @@ from django.views.generic.edit import FormView
 from django.views.decorators.http import require_POST
 from.forms import OrderModelForm
 from django.http import JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Create your views here.
@@ -71,16 +72,21 @@ class ProductFiltered(TemplateView):
             "products": products,
             "blocked":[filter],
             "header_text": f"{filter}: {value}",
-            "summary":f"All Our products matching '{value}':",
+            "summary":f"All Our products matching {filter} '{value}':",
             "navs": mark_safe(top_links(reverse("eshop_filtered", args=[filter, value]), ["eshop"])),
             "foot": mark_safe(team_site()),
             }
         return context
 
-class OrderForm(FormView):
-    template_name = "form-example.html"
+class OrderForm(LoginRequiredMixin, FormView):
+    template_name = "order.html"
     form_class = OrderModelForm
     interest = ""
+    login_url = reverse_lazy('login')  # Set the URL to redirect to for login
+
+    def handle_no_permission(self):
+        """Redirects users to the login page if they are not authenticated."""
+        return redirect(self.login_url)
 
     def get(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         # print(print("\nGET:\n", request, "\n\n", args, "\n\n", kwargs))
@@ -124,9 +130,7 @@ class OrderForm(FormView):
             item = Item.objects.get(id=self.interest)
             initial = item.__dict__
         user = self.request.user
-        # initial['address'] = user.address
         initial['email'] = user.email
-        print(initial)
 
         return initial
 

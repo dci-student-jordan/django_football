@@ -37,12 +37,15 @@ class OrderModelForm(forms.ModelForm):
                 description = item.description
                 size= item.size
                 item = item.item
-            descriptions = Item.objects.filter(item=item).values_list('description').distinct().order_by('description')
-            self.fields['description'].choices = [(desc[0], desc[0]) for desc in descriptions]
-            sizes = Item.objects.filter(item=item, description=description).values_list('size').distinct()
-            self.fields['size'].choices = [(s[0], s[0]) for s in sizes]
-            max_items = Item.objects.filter(item=item, description=description, size=size).count()
-            self.fields['number'].widget.attrs['max'] = max_items
+                
+            # The following we do from js to prevent invalid choices in case of user changing selection
+                
+            # descriptions = Item.objects.filter(item=item).values_list('description').distinct().order_by('description')
+            # self.fields['description'].choices = [(desc[0], desc[0]) for desc in descriptions]
+            # sizes = Item.objects.filter(item=item, description=description).values_list('size').distinct()
+            # self.fields['size'].choices = [(s[0], s[0]) for s in sizes]
+            # max_items = Item.objects.filter(item=item, description=description, size=size).count()
+            # self.fields['number'].widget.attrs['max'] = max_items
             if init:
                 # set initials in case no item is passed before
                 self.fields['item'].initial = item
@@ -52,7 +55,6 @@ class OrderModelForm(forms.ModelForm):
             self.fields['number'].initial = 1
 
         if 'item' in self.initial:
-            print("FORMINIT")
             item = self.initial['item']
             description = self.initial['description']
             size = self.initial['size']

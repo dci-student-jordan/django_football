@@ -32,7 +32,7 @@
         const sizeSelect = document.getElementById('id_size');
         const numberSelect = document.getElementById('id_number');
 
-        fetchAndUpdate = function () {// Make an AJAX request to get updated details
+        fetchAndUpdate = function () { // Make an AJAX request to get updated details
             const selectedDescr = descriptionSelect.value;
             const selectedItem = itemSelect.value;
             const selectedSize = sizeSelect.value;
@@ -95,6 +95,9 @@
                 selectElement.selectedIndex = 0
             }
         }
+
+        // On load we set choices here
+        fetchAndUpdate()
     });
 </script>
 {% endblock content %}
