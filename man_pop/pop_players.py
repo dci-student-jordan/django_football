@@ -13,4 +13,4 @@ def create_players ():
     positions = ['goalkeeper', 'forward', 'midfielder', 'defender', 'striker', 'substitute']
 
     for _ in range(25):
-        Player.objects.create(name= fake.name(), age=random.randint(18, 35), position=random.choice(positions))
+        Player.objects.get_or_create(name= fake.name(), age=random.randint(18, 35), position=random.choice(positions))

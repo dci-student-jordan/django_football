@@ -1,4 +1,6 @@
 __pycache__
 .venv
+.vscode
 examples
 .env
+deployement_notes.txt

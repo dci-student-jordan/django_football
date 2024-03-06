@@ -81,12 +81,13 @@ colors = [
 def create_infos():
     """populate the prayersprofile table"""
     for player in Player.objects.all():
-        PlayerProfile.objects.create(player=player, height=randint(150, 200), weight=randint(75, 95), nationality=choice(nationalities))
+        profile, created = PlayerProfile.objects.get_or_create(height=randint(150, 200), weight=randint(75, 95), nationality=choice(nationalities))
+        player.profile = profile
 
 def create_teams():
     """populate the teams table"""
     for team in opponents:
-        Team.objects.create(name=team, town=choice(cities), color=choice(colors))
+        Team.objects.get_or_create(name=team, town=choice(cities), color=choice(colors))
 
 def generate_dates(start_year, end_year, num_dates, fake):
     dates = []
@@ -109,10 +110,8 @@ def create_player_to_teams_relations():
         in_teams = randint(1, 4)
         enter_year = 2022 - in_teams
         other_teams_list = generate_dates(2010, enter_year, in_teams, fake)
-        print(f"Teams for {player.name}")
         for entry in range(0, len(other_teams_list)-2):
             team = choice(teams)
             from_date = other_teams_list[entry]
             to_date = other_teams_list[entry+1]
-            print(f"{player.name} played at team '{team.name}' from {from_date} till {to_date}")
-            TeamReg.objects.create(player=player, team=team, from_date=from_date, to_date=to_date)
+            TeamReg.objects.get_or_create(player=player, team=team, from_date=from_date, to_date=to_date)

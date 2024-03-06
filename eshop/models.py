@@ -28,10 +28,10 @@ class Order(models.Model):
     PAYMENT_CHOICES = [(1, "Paypal"), (2, "Card"), (3, "Apple")]
 
     item = models.CharField(max_length=100,
-                            choices=[(item, item) for item in Item.objects.values_list('item', flat=True).distinct().order_by('item')],
+                            # choices=[(item, item) for item in Item.objects.values_list('item', flat=True).distinct().order_by('item')],
                             default="")
     description = models.CharField(max_length=100,
-                            choices=[(descr, descr) for descr in Item.objects.values_list('description', flat=True).distinct().order_by('description')],
+                            # choices=[(descr, descr) for descr in Item.objects.values_list('description', flat=True).distinct().order_by('description')],
                             default="")
     size = models.CharField(max_length=100,
                             choices=SIZE_CHOICES,

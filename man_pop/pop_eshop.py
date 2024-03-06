@@ -228,6 +228,6 @@ items = [
 ]
 
 def create_items():
-    from random import randint
+    from random import randint  
     for i in range(5000):
-        Item.objects.create(item=choice(items), description=choice(descriptions), price=randint(15, 75), size=choice(sizes))
+        Item.objects.get_or_create(item=choice(items), description=choice(descriptions), price=randint(15, 75), size=choice(sizes))
