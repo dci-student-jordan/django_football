@@ -87,16 +87,25 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'footbal_team_and_shop'),
-        'USER': os.environ.get('DB_USER', 'football_page_user'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'football_page_user_Pa$5word'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),  # Set to the host where your PostgreSQL server is running
-        'PORT': os.environ.get('DB_POSRT', '5432'),      # Set to the port on which PostgreSQL is running (default is 5432)
+import dj_database_url
+if "DATABASE_URL" in os.environ:
+    DATABASES = {
+        "default" : dj_database_url.config(
+            conn_max_age=500,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME', 'footbal_team_and_shop'),
+            'USER': os.environ.get('DB_USER', 'football_page_user'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'football_page_user_Pa$5word'),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),  # Set to the host where your PostgreSQL server is running
+            'PORT': os.environ.get('DB_POSRT', '5432'),      # Set to the port on which PostgreSQL is running (default is 5432)
+        }
+    }
 
 # DATABASES = {
 #     'default': {
@@ -163,47 +172,3 @@ LOGIN_REDIRECT_URL = "eshop_home"
 LOGOUT_REDIRECT_URL = "eshop_home"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-            "style": "{",
-        },
-        "simple": {
-            "format": "{levelname} {message}",
-            "style": "{",
-        },
-    },
-    "handlers": {
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "debug.log",
-            "formatter": "verbose",
-        },
-        "console": {
-            "level": "INFO",
-            "class": "logging.StreamHandler",
-            "formatter": "simple",
-        },
-        "netlog": {
-            "class": "logging.handlers.SocketHandler",
-            "host": "127.0.0.1",
-            "port": 9020,
-            "formatter": "verbose",
-        },
-        # used with a custom socket logging receiver
-        # this is because logging to one file by multiple processes is not feasible otherwise
-    },
-    "loggers": {
-        "mydjangologger": {
-            # "handlers": ["console", "file", "netlog"],
-            "handlers": ["netlog"],
-            "level": "DEBUG",
-            "propagate": True,
-        },
-    },
-}
