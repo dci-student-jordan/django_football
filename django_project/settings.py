@@ -33,7 +33,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-e5k(56xu%pvpo6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["djangofootball-production.up.railway.app", "127.0.0.1"]
 
 
 # Application definition
@@ -172,3 +172,5 @@ LOGIN_REDIRECT_URL = "eshop_home"
 LOGOUT_REDIRECT_URL = "eshop_home"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+CSRF_TRUSTED_ORIGINS = ["djangofootball-production.up.railway.app"]
