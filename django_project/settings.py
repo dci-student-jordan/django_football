@@ -173,4 +173,4 @@ LOGOUT_REDIRECT_URL = "eshop_home"
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-CSRF_TRUSTED_ORIGINS = ["djangofootball-production.up.railway.app"]
+CSRF_TRUSTED_ORIGINS = ["https://*.railway.app"]

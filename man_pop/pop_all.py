@@ -7,7 +7,7 @@ def pop_db():
     print("popping players")
     create_players()
     print("popping shopItems")
-    create_items
+    create_items()
     print("popping games")
     create_games()
     print("popping goalsscores")
