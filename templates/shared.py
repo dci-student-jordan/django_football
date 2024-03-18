@@ -34,7 +34,7 @@ def top_links(exclude_request, app):
             urls.append(url)
     returnded_urls = ""
     for url in [url for url in urls if not url[0] == exclude_request]:
-        returnded_urls += f'<a href={url[0]} class="list-group-item  custom-list-item">{url[1]}</a>'
+        returnded_urls += f'<li><a href={url[0]} class="dropdown-item btn-lg">{url[1]}</a></li>'
     return returnded_urls
 
 
