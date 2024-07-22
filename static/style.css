@@ -6,6 +6,7 @@
 html, body {
     height: 100%;
     margin: 0;
+    text-shadow: 2px 2px 5px rgb(249, 255, 243);
 }
 
 
@@ -25,6 +26,11 @@ body {
     flex-direction: column;
 }
 
+.btn, .rounded {
+    background-color: rgba(249, 255, 243, 0.223);
+    box-shadow: -5px -5px 20px rgba(173, 216, 230, 0.351);
+}
+
 
 /* Style the header */
 header {
@@ -32,7 +38,6 @@ header {
     padding: 30px;
     text-align: center;
     font-size: 35px;
-    color: white;
 }
 
 /* Create two columns/boxes that floats next to each other */
