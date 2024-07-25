@@ -15,8 +15,9 @@ Football page:
   
 Part of my studies at the [DCI](https://start.digitalcareerinstitute.org/become-a-python-backend-developer)
 
-### Test
+# Test
 
 Clone or zip-download the repo, cd django_football, create a venv and run pip install -r requirements, then start the django server with python manage.py runserver.
-You can also have a look at the [deployed app here](https://djangofootball-production.up.railway.app/)
-**Sign up as a new user or log in as _Bob_, pw _bgt56789_**.
+You can also have a look at the [deployed app here](https://djangofootball-production.up.railway.app/).
+
+**Then Sign up as a new user or log in as _Bob_, pw _bgt56789_**.
