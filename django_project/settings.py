@@ -185,3 +185,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://www.reinissance.de",
     "https://djangofootball-production.up.railway.app",
 ]
+
+SESSION_COOKIE_SAMESITE = None
+SESSION_COOKIE_SECURE = True  # Ensure this is set if you're using HTTPS
+CSRF_COOKIE_SAMESITE = None
+CSRF_COOKIE_SECURE = True  # Ensure this is set if you're using HTTPS
