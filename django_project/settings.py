@@ -176,3 +176,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 CSRF_TRUSTED_ORIGINS = ["https://*.railway.app"]
 
 CSP_FRAME_ANCESTORS = ["self", "https://www.reinissance.de"]
+
+X_FRAME_OPTIONS = 'ALLOWALL'
