@@ -28,7 +28,7 @@ if os.path.isfile(env_path):
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-e5k(56xu%pvpo6c9q&p=&q$3^m6hzu^teemth+ulgj6tr+0%3!')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
@@ -175,4 +175,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 CSRF_TRUSTED_ORIGINS = ["https://*.railway.app"]
 
-CSP_FRAME_ANCESTORS = "'self' 'https://reinissance.de'"
+CSP_FRAME_ANCESTORS = ["self", "https://reinissance.de"]
