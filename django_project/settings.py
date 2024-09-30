@@ -175,4 +175,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 CSRF_TRUSTED_ORIGINS = ["https://*.railway.app"]
 
-CSP_FRAME_ANCESTORS = "'self' 'https://reinissance.de'"
+CSP_FRAME_ANCESTORS = ["self", "https://reinissance.de'"]
