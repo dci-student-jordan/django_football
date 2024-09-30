@@ -50,9 +50,11 @@ INSTALLED_APPS = [
     'man_pop',
     "crispy_forms",
     "crispy_bootstrap5",
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -178,3 +180,8 @@ CSRF_TRUSTED_ORIGINS = ["https://djangofootball-production.up.railway.app", "htt
 CSP_FRAME_ANCESTORS = ["self", "https://www.reinissance.de"]
 
 X_FRAME_OPTIONS = 'ALLOWALL'
+
+CORS_ALLOWED_ORIGINS = [
+    "https://www.reinissance.de",
+    "https://djangofootball-production.up.railway.app",
+]
