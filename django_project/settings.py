@@ -101,7 +101,7 @@ else:
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': os.environ.get('DB_NAME', 'footbal_team_and_shop'),
             'USER': os.environ.get('DB_USER', 'football_page_user'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', 'football_page_user_Pa$5word'),
+            'PASSWORD': os.environ.get('DB_PASSWORD'),
             'HOST': os.environ.get('DB_HOST', 'localhost'),  # Set to the host where your PostgreSQL server is running
             'PORT': os.environ.get('DB_POSRT', '5432'),      # Set to the port on which PostgreSQL is running (default is 5432)
         }
@@ -175,4 +175,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 CSRF_TRUSTED_ORIGINS = ["https://*.railway.app"]
 
-CSP_FRAME_ANCESTORS = ["self", "https://reinissance.de"]
+CSP_FRAME_ANCESTORS = ["self", "https://www.reinissance.de"]
